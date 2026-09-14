@@ -17,61 +17,76 @@ export const PAGE_SCHEMA = {
     label: '홈',
     sections: [
       {
-        label: '메인 상단 (풀화면 비디오 히어로)',
-        note: '배경 영상은 코드에 고정된 파일을 사용합니다. 문구만 여기서 바꿀 수 있습니다.',
+        label: '스크롤 스토리 – 첫 화면 (오프닝 영상)',
+        note: '배경 영상은 코드에 고정된 파일을 사용합니다. 문구만 여기서 바꿀 수 있습니다. 제목은 줄바꿈한 그대로 한 줄씩 나뉘어 나갑니다.',
         fields: [
-          { key: 'heroSub', label: '작은 영문 라벨', type: 'text', size: '0.85rem', koOnly: true, ko: 'Respect for Pet Life' },
-          { key: 'heroTitle', label: '메인 제목', type: 'textarea', size: '4.6rem', ko: '함께하는 일상에,\n건강한 행복을.', en: 'Better food.\nHappier life, together.' },
-          { key: 'heroBody', label: '본문', type: 'textarea', size: '1.05rem', ko: '반려동물을 향한 진심을 담아\n좋은 먹거리와 더 나은 내일을 만듭니다.', en: 'Thoughtful nutrition and everyday care,\nfor a healthier life by your side.' },
-          { key: 'heroButton', label: '버튼 문구', type: 'text', size: '0.85rem', ko: '브랜드 포트폴리오', en: 'Explore Brands' },
+          { key: 'storyEyebrow', label: '작은 영문 라벨', type: 'text', size: '10px', koOnly: true, ko: 'RESPECT FOR PET LIFE' },
+          { key: 'storyHeroTitle', label: '오프닝 제목', type: 'textarea', size: 'clamp(30px,4.45vw,76px)', ko: '존중은 아주 작고 사소한\n것에서부터 시작됩니다.', en: 'Respect begins\nwith the smallest things.' },
         ],
       },
       {
-        label: '생산 및 R&D 인프라 섹션 제목',
+        label: '스크롤 스토리 – 대표 제품 3종 헤드라인',
+        note: '제품 이미지·명칭·상세 설명은 코드에 고정되어 있고, 큰 헤드라인 문구만 여기서 바꿀 수 있습니다.',
         fields: [
-          { key: 'infraEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'INFRASTRUCTURE & R&D' },
-          { key: 'infraTitle', label: '섹션 제목', type: 'text', size: '1.8rem', ko: '생산 및 R&D 인프라', en: 'Production & R&D Infrastructure' },
-          { key: 'infraBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '엄격한 품질 인증을 획득한 제조시설과 전문 연구소, 첨단 물류 시스템으로 안전하고 신뢰할 수 있는 제품을 공급합니다.', en: 'Certified manufacturing facilities, specialized research, and nationwide logistics supporting premium quality.' },
+          { key: 'storyProduct1Title', label: '① 테라픽 헤드라인', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '한 끼에 담은 진심이\n매일의 활력이 되도록.', en: 'Good food.\nFor a life full of energy.' },
+          { key: 'storyProduct2Title', label: '② 비건 덴탈 헤드라인', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '믿을 수 있는 원료 사용으로\n더 건강하게.', en: 'Trusted ingredients.\nHealthier lives.' },
+          { key: 'storyProduct3Title', label: '③ 와이즈 3.6.5 헤드라인', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '펫 푸드를 넘어\n펫 케어를 완성.', en: 'Beyond pet food.\nComplete pet care.' },
         ],
       },
       {
-        label: '브랜드 & 대표 상품 섹션 제목',
+        label: '스크롤 스토리 – 제조 장면',
         fields: [
-          { key: 'coreEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'Core Brands & Products' },
-          { key: 'coreTitle', label: '섹션 제목', type: 'textarea', size: '3.2rem', ko: '매일의 한 끼부터,\n기분 좋은 작은 보상까지.', en: 'From everyday meals\nto little moments of joy.' },
-          { key: 'coreBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '과학과 신뢰로 만든 부명의 대표 펫 케어 브랜드와 엄선된 베스트셀러 제품 라인업입니다.', en: 'Specialized pet care brands and verified bestseller lineup built on science and trust.' },
+          { key: 'manufacturingEyebrow', label: '작은 영문 라벨', type: 'text', size: '10px', koOnly: true, ko: 'THE STANDARD BEHIND EVERY MEAL' },
+          { key: 'manufacturingTitle', label: '장면 제목', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '눈에 보이는 한 끼,\n보이지 않는 수많은 원칙.', en: "The care you see.\nThe standards you don't." },
+          { key: 'manufacturingBody', label: '본문', type: 'textarea', size: '15px', ko: '제조부터 포장까지, 모든 과정에 정직한 기준을 담습니다.', en: 'From manufacturing to packaging, care goes into every step.' },
         ],
       },
       {
-        label: '수입 브랜드 하이라이트 섹션 제목',
+        label: '스크롤 스토리 – R&D 연구 장면',
         fields: [
-          { key: 'importedEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'Imported Brands' },
-          { key: 'importedTitle', label: '섹션 제목', type: 'text', size: '1.8rem', ko: '세계에서 엄선한 수입 브랜드', en: 'Global Brand Partners' },
-          { key: 'importedBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '전 세계에서 엄선한 프리미엄 펫 브랜드를 국내에 소개합니다.', en: 'Carefully selected premium brands from around the world.' },
+          { key: 'researchEyebrow', label: '작은 영문 라벨', type: 'text', size: '10px', koOnly: true, ko: 'RESEARCH FOR A BETTER LIFE' },
+          { key: 'researchTitle', label: '장면 제목', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '작은 변화에서 찾는\n더 나은 내일의 가능성.', en: 'Looking closer.\nThinking further.' },
+          { key: 'researchBody', label: '본문', type: 'textarea', size: '15px', ko: '반려동물의 일상을 세심하게 살피고,\n건강 관리의 새로운 가능성을 연구합니다.', en: 'Turning research into thoughtful everyday care.' },
         ],
       },
       {
-        label: '국내 대형 유통 파트너 섹션 제목',
+        label: '스크롤 스토리 – 물류 장면',
         fields: [
-          { key: 'retailTitle', label: '섹션 제목', type: 'text', size: '1.8rem', ko: '부명과 함께하는 국내 대형 유통 파트너', en: 'Major Retail Partners with BOOMYUNG' },
-          { key: 'retailBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '이마트, 홈플러스, 코스트코, 쿠팡, 편의점 4사 등 국내 13개 이상 유통 채널에 검증된 제품을 공급합니다.', en: 'Supplying verified products to major retail networks including E-Mart, Homeplus, Costco, Coupang, and convenience stores.' },
+          { key: 'logisticsEyebrow', label: '작은 영문 라벨', type: 'text', size: '10px', koOnly: true, ko: 'CONNECTED WITH CARE' },
+          { key: 'logisticsTitle', label: '장면 제목', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '정성을 담은 제품이\n일상에 닿기까지.', en: 'From our care,\nto your everyday.' },
+          { key: 'logisticsBody', label: '본문', type: 'textarea', size: '15px', ko: '제품과 파트너, 그리고 반려동물의 일상을 잇습니다.', en: 'Connecting products, partners and everyday life.' },
         ],
       },
       {
-        label: '펫 전문 유통사 섹션 제목',
+        label: '스크롤 스토리 – 마지막 장면 (엔딩 영상)',
         fields: [
-          { key: 'petRetailTitle', label: '섹션 제목', type: 'text', size: '1.8rem', ko: '부명과 함께 하는 국내 펫 전문 유통사', en: 'Pet Specialty Distributors' },
-          { key: 'petRetailBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '선진펫, 꼬기오, 야옹아멍멍해봐, 더 키코 등 국내 대형 펫 유통 채널에 검증된 제품을 공급합니다.', en: 'Supplying premium pet products to leading pet specialty distributors including Seonjin Pet, Kkio, Dog & Cat Paradise, and THE KICO.' },
+          { key: 'endingEyebrow', label: '작은 영문 라벨', type: 'text', size: '10px', koOnly: true, ko: 'BETTER FOOD. HAPPIER LIFE.' },
+          { key: 'endingTitle', label: '장면 제목', type: 'textarea', size: 'clamp(36px,4.7vw,76px)', ko: '이 행복이,\n조금 더 오래 이어지도록.', en: 'So their happiness\nlasts a little longer.' },
+          { key: 'endingBody', label: '본문', type: 'textarea', size: '15px', ko: '반려동물의 건강한 일상, 부명이 함께합니다.', en: 'BOOMYUNG, by your side.' },
         ],
       },
       {
-        label: 'B2B 파트너십 배너',
+        label: '브랜드 소개 섹션 (OUR BRAND)',
+        note: '큰 제목 "OUR BRAND"는 브랜드 워드마크라 고정되어 있고, 아래 설명 문구만 바꿀 수 있습니다.',
         fields: [
-          { key: 'b2bTag', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'BUSINESS PARTNERSHIP' },
-          { key: 'b2bTitle', label: '큰 제목', type: 'textarea', size: '1.8rem', ko: '부명과 함께하는\n비즈니스 파트너십', en: 'Partner with BOOMYUNG for Premium Pet Products' },
-          { key: 'b2bBody', label: '본문', type: 'textarea', size: '0.92rem', ko: '국내 대형 유통망부터 글로벌 수출까지, 검증된 펫 케어 제품으로 파트너십을 확장합니다.', en: 'From domestic retail to global exports, we expand reliable partnerships with proven pet care products.' },
-          { key: 'b2bBottomText', label: '하단 안내 문구', type: 'textarea', size: '1.05rem', ko: '대형 할인마트, 이커머스, 글로벌 바이어와 OEM/ODM 및 수출 파트너십을 진행합니다. 필요한 내용을 알려주세요.', en: 'We partner with major discount hypermarkets, e-commerce, global buyers, OEM/ODM, and overseas export. Let us know your requirements.' },
-          { key: 'b2bButton', label: '버튼 문구', type: 'text', size: '0.85rem', ko: 'B2B 문의하기', en: 'B2B Inquiries' },
+          { key: 'brandSubtitle', label: '설명 문구', type: 'textarea', size: '0.95rem', ko: '반려동물의 일상을 함께하는 부명의 브랜드를 소개합니다.', en: 'Discover the brands that care for every pet.' },
+        ],
+      },
+      {
+        label: '유통 파트너 소개 섹션',
+        fields: [
+          { key: 'partnersEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'CONNECTED FOR BETTER' },
+          { key: 'partnersTitle', label: '섹션 제목', type: 'textarea', size: '1.8rem', ko: '어디서든 만날 수 있도록.\n믿음직한 파트너와 함께.', en: 'Closer to you.\nTogether with our partners.' },
+          { key: 'partnersBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '코스트코,이마트,쿠팡,홈플러스 및 편의점 등 13개 이상 대형 유통 채널 및\n펫 전문 유통 채널에 검증된 제품을 공급합니다,', en: 'We supply verified products to over 13 major retail channels, including Costco, E-Mart, Coupang, Homeplus and convenience stores, as well as specialist pet retail channels.' },
+        ],
+      },
+      {
+        label: '수출 파트너십 섹션',
+        fields: [
+          { key: 'exportEyebrow', label: '작은 영문 라벨', type: 'text', size: '10px', koOnly: true, ko: 'FROM KOREA, TO THE WORLD' },
+          { key: 'exportTitle', label: '섹션 제목', type: 'textarea', size: 'clamp(33px,3.8vw,64px)', ko: '한국에서 시작한 진심,\n세계의 일상으로.', en: 'Care that begins here.\nReaching the world.' },
+          { key: 'exportBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '믿을 수 있는 펫 케어를 더 넓은 세상으로.\n부명과 함께 성장할 글로벌 파트너를 기다립니다.', en: 'Connecting trusted pet care with partners around the world.' },
+          { key: 'exportButton', label: '버튼 문구', type: 'text', size: '0.85rem', ko: '파트너십 문의하기', en: 'Become a partner' },
         ],
       },
     ],
@@ -84,17 +99,13 @@ export const PAGE_SCHEMA = {
         label: '상단 배너',
         fields: [
           { key: 'heroImage', label: '배경 사진', type: 'image', width: 2560, height: 1440, src: './assets/renewal/about-hero.jpg' },
-          { key: 'heroEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.82rem', koOnly: true, ko: 'ABOUT BOOMYUNG' },
           { key: 'heroTitle', label: '페이지 제목', type: 'textarea', size: '2.5rem', ko: '더 좋은 일상은,\n존중에서 시작됩니다.', en: 'A better everyday\nbegins with respect.' },
-          { key: 'heroBody', label: '본문', type: 'textarea', size: '1.05rem', ko: '30년 이상 축적된 정직한 기술과 원칙 있는 품질, 견고한 신뢰를 바탕으로 펫 헬스케어의 미래를 창조합니다.', en: 'Built upon 30 years of honest technology, uncompromising safety protocols, and enduring customer trust.' },
         ],
       },
       {
         label: 'CEO 메시지',
         fields: [
-          { key: 'ceoEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'CEO Message' },
           { key: 'ceoSectionTitle', label: '섹션 제목', type: 'textarea', size: '1.8rem', ko: '생명을 존중하는 마음에서\n기술이 시작됩니다', en: 'Dreaming of a World Where Pets Thrive' },
-          { key: 'ceoSectionBody', label: '섹션 소개', type: 'textarea', size: '0.95rem', ko: '(주)부명이 추구하는 진정한 가치와 정직한 약속을 전합니다.', en: "A warm message of dedication and integrity from CEO Seong-hoon Jeong." },
           { key: 'ceoHighlight', label: '왼쪽 카드 인용구', type: 'textarea', size: '1.4rem', ko: '존중은 아주 작고 사소한 배려에서부터 시작됩니다.', en: 'Respect begins with small and thoughtful care.' },
           { key: 'ceoName', label: '대표 이름', type: 'text', size: '0.95rem', ko: '정 성 훈', en: 'Seong-hoon Jeong' },
           { key: 'ceoTitleText', label: '대표 직함', type: 'text', size: '0.85rem', ko: '(주)부명 대표이사', en: 'CEO, BOOMYUNG CO., LTD.' },
@@ -103,11 +114,44 @@ export const PAGE_SCHEMA = {
         ],
       },
       {
-        label: '기업 연혁 섹션 제목',
+        label: '기업 연혁 섹션',
         fields: [
-          { key: 'historyEyebrow', label: '작은 영문 라벨', type: 'text', size: '0.78rem', koOnly: true, ko: 'History' },
-          { key: 'historyTitle', label: '섹션 제목', type: 'text', size: '1.8rem', ko: '도전과 신뢰의 30년 발자취', en: 'Our 30-Year Journey' },
           { key: 'historyBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '1995년 창립 이래 오늘날 대한민국 펫 산업의 중심으로 성장하기까지의 여정입니다.', en: 'Tracing the milestones of growth, manufacturing excellence, and distribution dominance since 1995.' },
+        ],
+      },
+      {
+        label: '사업 기반 소개 (제조·연구·물류·글로벌 생산 갤러리) 섹션 제목',
+        fields: [
+          { key: 'facilitiesTitle', label: '섹션 제목', type: 'textarea', size: '1.8rem', ko: '좋은 일상을 만드는 모든 과정.', en: 'Care, at every step.' },
+          { key: 'facilitiesBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '연구에서 제조, 그리고 유통까지.\n각자의 전문성을 하나의 기준으로.', en: 'Research. Manufacturing. Distribution.\nConnected by care.' },
+        ],
+      },
+      {
+        label: '사업 기반 – ① 제조',
+        fields: [
+          { key: 'facProductionTitle', label: '제목', type: 'text', size: '1.5rem', ko: '한 끼의 품질을 만드는 현장.', en: 'Where quality takes shape.' },
+          { key: 'facProductionBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '원료부터 제조, 포장까지. 반려동물 식품을 위한 제조 시설에서 제품의 기준을 지켜갑니다.', en: 'From ingredients to production and packaging, care goes into every step.' },
+        ],
+      },
+      {
+        label: '사업 기반 – ② 연구개발',
+        fields: [
+          { key: 'facResearchTitle', label: '제목', type: 'text', size: '1.5rem', ko: '더 세심하게 살피고, 더 깊이 연구합니다.', en: 'Looking closer. Thinking further.' },
+          { key: 'facResearchBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '반려동물의 건강한 일상을 위한 연구개발. 작은 변화에서 더 나은 케어의 가능성을 찾습니다.', en: 'Exploring new possibilities for everyday pet health and care.' },
+        ],
+      },
+      {
+        label: '사업 기반 – ③ 물류',
+        fields: [
+          { key: 'facLogisticsTitle', label: '제목', type: 'text', size: '1.5rem', ko: '좋은 제품이 일상에 닿기까지.', en: 'Connecting care with everyday life.' },
+          { key: 'facLogisticsBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '제품과 유통 파트너를 연결하는 물류 네트워크. 보관부터 출고까지, 다음 일상을 준비합니다.', en: 'Our logistics network connects products with retail partners, from storage to dispatch.' },
+        ],
+      },
+      {
+        label: '사업 기반 – ④ 글로벌 생산',
+        fields: [
+          { key: 'facGlobalTitle', label: '제목', type: 'text', size: '1.5rem', ko: '더 넓은 가능성을 향한 생산 기반.', en: 'A foundation for wider possibilities.' },
+          { key: 'facGlobalBody', label: '본문', type: 'textarea', size: '0.95rem', ko: '칭다오 가공 시설과 함께 위생용품 및 OEM/ODM 분야의 글로벌 생산 기반을 이어갑니다.', en: 'Extending our global production network for hygiene products and OEM/ODM through the Qingdao facility.' },
         ],
       },
       {

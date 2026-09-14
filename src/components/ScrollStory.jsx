@@ -14,7 +14,22 @@ const products = [
   { id: '데이스포-와이즈-365덴탈브러쉬-피부', image: 'wise-dental.png', tag: 'DAYSPO · WISE 3.6.5', title: <>펫 푸드를 넘어<br />펫 케어를 완성.</>, titleEn: <>Beyond pet food.<br />Complete pet care.</>, body: '와이즈 3.6.5 덴탈브러쉬 스킨&코트', bodyEn: 'WISE 3.6.5 Dental Brush Skin & Coat', detail: '매일 이어가는 반려동물 구강 관리', detailEn: 'Dental care made part of their day.', color: '#69b5b4' },
 ];
 
-export default function ScrollStory({ en }) {
+// 오프닝 타이틀 전용 — CSS가 h1 span마다 그라디언트를 걸고 각 span을 block으로 렌더링하므로
+// 줄마다 <span>만 감싸면 되고, <br/>을 추가로 넣으면 빈 줄이 하나 더 생겨버린다.
+function withBreaks(text) {
+  const parts = String(text || '').split('\n');
+  return parts.map((line, i) => <span key={i}>{line}</span>);
+}
+
+// 그 외(제품/제조/연구/물류/엔딩 장면) 제목 — 원래 코드가 <br/>로 줄을 나누던 자리라
+// 줄바꿈마다 <br/>을 넣어야 기존 화면과 동일하게 보인다.
+function withLineBreaks(text) {
+  const parts = String(text || '').split('\n');
+  return parts.map((line, i) => <span key={i}>{line}{i < parts.length - 1 ? <br /> : null}</span>);
+}
+
+export default function ScrollStory({ en, txt }) {
+  const content = txt || (() => '');
   const root = useRef(null);
   const stage = useRef(null);
   const [simple, setSimple] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -164,26 +179,26 @@ export default function ScrollStory({ en }) {
           <video muted playsInline preload="auto" className={videoReady.living?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,living:true}))}><source src="./assets/renewal/living.mp4" type="video/mp4" /></video>
           <div className="story-film-shade" />
         </div>
-        <div className="story-opening-title"><span className="story-eyebrow">RESPECT FOR PET LIFE</span><h1 id="home-heading">{en?<><span>Respect begins </span><span>with the smallest things.</span></>:<><span>존중은 아주 작고 사소한 </span><span>것에서부터 시작됩니다.</span></>}</h1><button className="story-scroll-prompt" onClick={()=>go(1)}>{en?'Scroll to discover':'스크롤하며 만나보세요'} <span>↓</span></button></div>
+        <div className="story-opening-title"><span className="story-eyebrow">{content('storyEyebrow')}</span><h1 id="home-heading">{withBreaks(content('storyHeroTitle'))}</h1><button className="story-scroll-prompt" onClick={()=>go(1)}>{en?'Scroll to discover':'스크롤하며 만나보세요'} <span>↓</span></button></div>
       </article>
       {products.map((product,i)=><article className={`story-scene story-product-scene story-product-${i}`} key={product.id} data-story-chapter={i+1} style={{'--product-color':product.color}}>
-        <div className="story-spatial-bg" aria-hidden="true"><i/><i/><i/><div/></div><div className="story-product-copy"><span className="story-eyebrow">{product.tag}</span><h2>{en?product.titleEn:product.title}</h2><Link to={`/catalog/${encodeURIComponent(product.id)}`} className="story-link">{en?'Explore the product':'제품 자세히 보기'} <span>↗</span></Link></div>
+        <div className="story-spatial-bg" aria-hidden="true"><i/><i/><i/><div/></div><div className="story-product-copy"><span className="story-eyebrow">{product.tag}</span><h2>{withLineBreaks(content(`storyProduct${i+1}Title`))}</h2><Link to={`/catalog/${encodeURIComponent(product.id)}`} className="story-link">{en?'Explore the product':'제품 자세히 보기'} <span>↗</span></Link></div>
         <div className="story-product-object"><div className="story-orbits" aria-hidden="true"><i/><i/><i/></div><img src={`./assets/renewal/${product.image}`} alt={en?product.bodyEn:product.body} /><div className="story-product-shadow" aria-hidden="true"/></div>
         <span className="story-watermark" aria-hidden="true">{['NUTRITION','PLANT BASED','EVERYDAY CARE'][i]}</span>
       </article>)}
       <article className="story-scene story-manufacturing" data-story-chapter="4">
         <div className="story-factory-frame"><img src="./assets/homad/homad_02.jpg" alt={en?'Pet food production and packaging equipment':'반려동물 식품 제조 및 포장 설비'}/><div className="story-film-shade"/></div>
-        <div className="story-media-copy"><span className="story-eyebrow">THE STANDARD BEHIND EVERY MEAL</span><h2>{en?<>The care you see.<br/>The standards you don't.</>:<>눈에 보이는 한 끼,<br/>보이지 않는 수많은 원칙.</>}</h2><p>{en?'From manufacturing to packaging, care goes into every step.':'제조부터 포장까지, 모든 과정에 정직한 기준을 담습니다.'}</p><div className="story-cert-tags"><span>HACCP</span><span>ISO 22000</span><span>OEM / ODM</span></div><Link to="/trust" className="story-link">{en?'Our quality standards':'품질 관리 알아보기'} ↗</Link></div>
+        <div className="story-media-copy"><span className="story-eyebrow">{content('manufacturingEyebrow')}</span><h2>{withLineBreaks(content('manufacturingTitle'))}</h2><p>{content('manufacturingBody')}</p><div className="story-cert-tags"><span>HACCP</span><span>ISO 22000</span><span>OEM / ODM</span></div><Link to="/trust" className="story-link">{en?'Our quality standards':'품질 관리 알아보기'} ↗</Link></div>
         <div className="story-factory-detail">{['iso22000','iso14001','haccp'].map(cert=><figure key={cert}><img src={`./assets/renewal/${cert}-private.jpg`} alt={`${cert.toUpperCase()} 인증서 — 회사명 비공개`}/><figcaption>{cert.toUpperCase().replace('ISO','ISO ')}</figcaption></figure>)}</div>
       </article>
       <article className="story-scene story-research" data-story-chapter="5">
-        <div className="story-media-copy"><span className="story-eyebrow">RESEARCH FOR A BETTER LIFE</span><h2>{en?<>Looking closer.<br/>Thinking further.</>:<>작은 변화에서 찾는<br/>더 나은 내일의 가능성.</>}</h2><p>{en?'Turning research into thoughtful everyday care.':'반려동물의 일상을 세심하게 살피고,\n건강 관리의 새로운 가능성을 연구합니다.'}</p><Link to="/about" className="story-link">{en?'Discover our story':'부명 이야기'} ↗</Link></div>
+        <div className="story-media-copy"><span className="story-eyebrow">{content('researchEyebrow')}</span><h2>{withLineBreaks(content('researchTitle'))}</h2><p style={{whiteSpace:'pre-line'}}>{content('researchBody')}</p><Link to="/about" className="story-link">{en?'Discover our story':'부명 이야기'} ↗</Link></div>
         <div className="story-research-object"><div className="story-research-halo"/><img src="./assets/wellzen/wellzen_02.png" alt={en?'A pet health research application':'반려동물 건강 관리 연구개발 적용 사례'}/><div className="story-research-caption"><span>R&D</span><span>{en?'Thoughtful care, through research.':'더 깊이 연구하고, 더 세심하게.'}</span></div></div>
       </article>
-      <article className="story-scene story-logistics" data-story-chapter="6"><div className="story-logistics-frame"><video muted playsInline preload="metadata" poster="./assets/renewal/logistics-poster.jpg" className="ready"><source src="./assets/renewal/logistics.mp4" type="video/mp4"/></video><div className="story-film-shade"/></div><div className="story-media-copy"><span className="story-eyebrow">CONNECTED WITH CARE</span><h2>{en?<>From our care,<br/>to your everyday.</>:<>정성을 담은 제품이<br/>일상에 닿기까지.</>}</h2><p>{en?'Connecting products, partners and everyday life.':'제품과 파트너, 그리고 반려동물의 일상을 잇습니다.'}</p></div></article>
+      <article className="story-scene story-logistics" data-story-chapter="6"><div className="story-logistics-frame"><video muted playsInline preload="metadata" poster="./assets/renewal/logistics-poster.jpg" className="ready"><source src="./assets/renewal/logistics.mp4" type="video/mp4"/></video><div className="story-film-shade"/></div><div className="story-media-copy"><span className="story-eyebrow">{content('logisticsEyebrow')}</span><h2>{withLineBreaks(content('logisticsTitle'))}</h2><p>{content('logisticsBody')}</p></div></article>
       <article className="story-scene story-ending" data-story-chapter="7">
         <div className="story-ending-frame"><img className="story-video-poster" src="./assets/renewal/garden-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog enjoying a bright garden':'햇살 가득한 정원에서 걷는 강아지'}/><video muted playsInline preload="metadata" className={videoReady.garden?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,garden:true}))}><source src="./assets/renewal/garden.mp4" type="video/mp4"/></video><div className="story-film-shade"/></div>
-        <div className="story-ending-copy"><span className="story-eyebrow">BETTER FOOD. HAPPIER LIFE.</span><h2>{en?<>So their happiness<br/>lasts a little longer.</>:<>이 행복이,<br/>조금 더 오래 이어지도록.</>}</h2><p>{en?'BOOMYUNG, by your side.':'반려동물의 건강한 일상, 부명이 함께합니다.'}</p><Link to="/brands" className="story-link">{en?'Meet our brands':'우리의 브랜드 만나보기'} ↗</Link></div>
+        <div className="story-ending-copy"><span className="story-eyebrow">{content('endingEyebrow')}</span><h2>{withLineBreaks(content('endingTitle'))}</h2><p>{content('endingBody')}</p><Link to="/brands" className="story-link">{en?'Meet our brands':'우리의 브랜드 만나보기'} ↗</Link></div>
       </article>
       <nav className="story-navigation" aria-label={en?'Story chapters':'이야기 장면 선택'}>{names.map((name,i)=><button key={i} className={chapter===i?'active':''} aria-current={chapter===i?'step':undefined} aria-label={name} onClick={()=>go(i)}><i/><span>{name}</span></button>)}</nav>
       <div className="story-hud"><span className="story-chapter-count">0{chapter+1}<i/>08</span><span className="story-current-name">{names[chapter]}</span><button onClick={changeMode} aria-pressed={simple}>{simple?(en?'Immersive view':'몰입형 보기'):(en?'Reduce motion':'모션 줄이기')}</button><button onClick={()=>document.getElementById('brand-collection').scrollIntoView({behavior:simple?'instant':'smooth'})}>{en?'Brands':'브랜드 바로가기'} ↓</button></div>

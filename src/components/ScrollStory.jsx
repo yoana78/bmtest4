@@ -68,7 +68,10 @@ export default function ScrollStory({ en, txt }) {
     const style = (node, values) => Object.assign(node.style, values);
     const reveal = (node, amount) => {
       node.style.opacity = amount;
-      node.style.visibility = amount > .002 ? 'visible' : 'hidden';
+      // visibility:hidden (instead of just opacity:0) makes Chrome suspend a <video>'s decode
+      // pipeline entirely, which permanently breaks .seekable for that element even after it
+      // becomes visible again -- so keep videos visible and rely on opacity + inert to hide them.
+      if (!node.querySelector('video')) node.style.visibility = amount > .002 ? 'visible' : 'hidden';
       node.inert = amount < .65;
     };
     const seek = (video, value) => {

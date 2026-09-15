@@ -4433,6 +4433,8 @@ h1, h2, h3, h4, h5, h6, p, span, a, label {
 
 .bm-catalog-card-footer {
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: space-between;
   align-items: center;
   padding-top: 14px;
@@ -6923,4 +6925,11 @@ img[alt="아무도없개"] {
     font-size: 1.05rem;
     white-space: normal;
   }
+}
+
+/* Keep the narrow-screen rule after tablet rules so it cannot be overridden. */
+@media (max-width:480px) {
+  .bm-catalog-grid { grid-template-columns:minmax(0,1fr); }
+  .bm-catalog-card-title { height:auto; min-height:2.8em; display:block; overflow:visible; overflow-wrap:anywhere; }
+  .bm-catalog-card-footer { align-items:flex-start; }
 }

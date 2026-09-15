@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './ScrollStory.css';
+import ScrubVideo from './ScrubVideo';
 
 const clamp = (n, a = 0, b = 1) => Math.min(b, Math.max(a, n));
 const ramp = (a, b, n) => { const p = clamp((n - a) / (b - a)); return p * p * (3 - 2 * p); };
@@ -75,7 +76,7 @@ export default function ScrollStory({ en, txt }) {
       node.inert = amount < .65;
     };
     const seek = (video, value) => {
-      if (!video || !Number.isFinite(video.duration)) return;
+      if (!video || !Number.isFinite(video.duration) || !video.seekable.length || video.seekable.end(video.seekable.length - 1) <= 0) return;
       video.pause();
       const seconds = clamp(value) * Math.max(0, video.duration - .05);
       if (!video.seeking && Math.abs(video.currentTime - seconds) > .035) video.currentTime = seconds;
@@ -160,12 +161,13 @@ export default function ScrollStory({ en, txt }) {
       if(!raf) raf=requestAnimationFrame(draw);
     };
     const onSeeked=()=>{if(alive&&!raf)raf=requestAnimationFrame(draw);};
-    [heroVideo,endingVideo,logisticsVideo].forEach(video=>video?.addEventListener('seeked',onSeeked));
+    const mediaEvents = ['seeked','loadeddata','canplay','progress','durationchange'];
+    [heroVideo,endingVideo,logisticsVideo].forEach(video=>mediaEvents.forEach(event=>video?.addEventListener(event,onSeeked)));
     window.addEventListener('scroll',measure,{passive:true});
     window.addEventListener('resize',measure);
     measure();
     current=target;
-    return()=>{alive=false;cancelAnimationFrame(raf);window.removeEventListener('scroll',measure);window.removeEventListener('resize',measure);screen.querySelectorAll('.story-scene').forEach(scene=>{scene.inert=false;});[heroVideo,endingVideo,logisticsVideo].forEach(video=>{video?.pause();video?.removeEventListener('seeked',onSeeked);});};
+    return()=>{alive=false;cancelAnimationFrame(raf);window.removeEventListener('scroll',measure);window.removeEventListener('resize',measure);screen.querySelectorAll('.story-scene').forEach(scene=>{scene.inert=false;});[heroVideo,endingVideo,logisticsVideo].forEach(video=>{video?.pause();mediaEvents.forEach(event=>video?.removeEventListener(event,onSeeked));});};
   }, [simple]);
 
   const go = index => {
@@ -179,7 +181,7 @@ export default function ScrollStory({ en, txt }) {
       <article className="story-scene story-intro" data-story-chapter="0">
         <div className="story-intro-frame">
           <img className="story-video-poster" src="./assets/renewal/living-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog and cat sharing a sunlit home':'햇살이 드는 집에서 함께 쉬는 강아지와 고양이'} />
-          <video muted playsInline preload="auto" className={videoReady.living?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,living:true}))}><source src="./assets/renewal/living.mp4" type="video/mp4" /></video>
+          <ScrubVideo muted playsInline preload="auto" className={videoReady.living?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,living:true}))} src="./assets/renewal/living.mp4" />
           <div className="story-film-shade" />
         </div>
         <div className="story-opening-title"><span className="story-eyebrow">{content('storyEyebrow')}</span><h1 id="home-heading">{withBreaks(content('storyHeroTitle'))}</h1><button className="story-scroll-prompt" onClick={()=>go(1)}>{en?'Scroll to discover':'스크롤하며 만나보세요'} <span>↓</span></button></div>
@@ -198,9 +200,9 @@ export default function ScrollStory({ en, txt }) {
         <div className="story-media-copy"><span className="story-eyebrow">{content('researchEyebrow')}</span><h2>{withLineBreaks(content('researchTitle'))}</h2><p style={{whiteSpace:'pre-line'}}>{content('researchBody')}</p><Link to="/about" className="story-link">{en?'Discover our story':'부명 이야기'} ↗</Link></div>
         <div className="story-research-object"><div className="story-research-halo"/><img src="./assets/wellzen/wellzen_02.png" alt={en?'A pet health research application':'반려동물 건강 관리 연구개발 적용 사례'}/><div className="story-research-caption"><span>R&D</span><span>{en?'Thoughtful care, through research.':'더 깊이 연구하고, 더 세심하게.'}</span></div></div>
       </article>
-      <article className="story-scene story-logistics" data-story-chapter="6"><div className="story-logistics-frame"><video muted playsInline preload="auto" poster="./assets/renewal/logistics-poster.jpg" className="ready"><source src="./assets/renewal/logistics.mp4" type="video/mp4"/></video><div className="story-film-shade"/></div><div className="story-media-copy"><span className="story-eyebrow">{content('logisticsEyebrow')}</span><h2>{withLineBreaks(content('logisticsTitle'))}</h2><p>{content('logisticsBody')}</p></div></article>
+      <article className="story-scene story-logistics" data-story-chapter="6"><div className="story-logistics-frame"><ScrubVideo muted playsInline preload="auto" poster="./assets/renewal/logistics-poster.jpg" className="ready" src="./assets/renewal/logistics.mp4" /><div className="story-film-shade"/></div><div className="story-media-copy"><span className="story-eyebrow">{content('logisticsEyebrow')}</span><h2>{withLineBreaks(content('logisticsTitle'))}</h2><p>{content('logisticsBody')}</p></div></article>
       <article className="story-scene story-ending" data-story-chapter="7">
-        <div className="story-ending-frame"><img className="story-video-poster" src="./assets/renewal/garden-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog enjoying a bright garden':'햇살 가득한 정원에서 걷는 강아지'}/><video muted playsInline preload="auto" className={videoReady.garden?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,garden:true}))}><source src="./assets/renewal/garden.mp4" type="video/mp4"/></video><div className="story-film-shade"/></div>
+        <div className="story-ending-frame"><img className="story-video-poster" src="./assets/renewal/garden-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog enjoying a bright garden':'햇살 가득한 정원에서 걷는 강아지'}/><ScrubVideo muted playsInline preload="auto" className={videoReady.garden?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,garden:true}))} src="./assets/renewal/garden.mp4" /><div className="story-film-shade"/></div>
         <div className="story-ending-copy"><span className="story-eyebrow">{content('endingEyebrow')}</span><h2>{withLineBreaks(content('endingTitle'))}</h2><p>{content('endingBody')}</p><Link to="/brands" className="story-link">{en?'Meet our brands':'우리의 브랜드 만나보기'} ↗</Link></div>
       </article>
       <nav className="story-navigation" aria-label={en?'Story chapters':'이야기 장면 선택'}>{names.map((name,i)=><button key={i} className={chapter===i?'active':''} aria-current={chapter===i?'step':undefined} aria-label={name} onClick={()=>go(i)}><i/><span>{name}</span></button>)}</nav>

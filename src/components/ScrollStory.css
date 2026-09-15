@@ -207,3 +207,7 @@ html,body { overflow-x:clip; height:auto; }
   .story-research-object { top:53%; height:30%; }
 }
 .story-stage { overflow:clip; }
+/* Finish the opening film before beginning the spatial transition. */
+.scroll-story { height:1400svh; }
+.story-scene video:not([data-frame-ready="true"]) { opacity:0; }
+@media(max-width:760px) { .scroll-story { height:1500svh; } }

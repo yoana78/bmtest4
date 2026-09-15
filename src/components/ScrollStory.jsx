@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './ScrollStory.css';
 import ScrubVideo from './ScrubVideo';
+import { chapterStops as stops, STORY_END, sceneTime, videoProgress } from './storyTimeline';
 
 const clamp = (n, a = 0, b = 1) => Math.min(b, Math.max(a, n));
 const ramp = (a, b, n) => { const p = clamp((n - a) / (b - a)); return p * p * (3 - 2 * p); };
 const mix = (a, b, p) => a + (b - a) * p;
-const stops = [0, 1.55, 2.6, 3.65, 4.7, 5.65, 6.5, 7.75];
+const productCenters = [1.55, 2.6, 3.65];
 const namesKo = ['함께하는 일상', '한 끼의 영양', '식물성 덴탈케어', '매일의 케어', '제조의 기준', '건강을 위한 연구', '물류의 연결', '더 행복한 내일'];
 const namesEn = ['Together', 'Nutrition', 'Plant-based care', 'Daily care', 'Manufacturing', 'Research', 'Logistics', 'A happier tomorrow'];
 const products = [
@@ -64,7 +65,6 @@ export default function ScrollStory({ en, txt }) {
     const logisticsVideo=get('.story-logistics video');
     let raf = 0;
     let target = 0;
-    let current = 0;
     let alive = true;
     const style = (node, values) => Object.assign(node.style, values);
     const reveal = (node, amount) => {
@@ -75,16 +75,27 @@ export default function ScrollStory({ en, txt }) {
       if (!node.querySelector('video')) node.style.visibility = amount > .002 ? 'visible' : 'hidden';
       node.inert = amount < .65;
     };
-    const seek = (video, value) => {
+    const wantedFrames = new Map();
+    const flushVideo = video => {
       if (!video || !Number.isFinite(video.duration) || !video.seekable.length || video.seekable.end(video.seekable.length - 1) <= 0) return;
       video.pause();
-      const seconds = clamp(value) * Math.max(0, video.duration - .05);
-      if (!video.seeking && Math.abs(video.currentTime - seconds) > .035) video.currentTime = seconds;
+      const value = wantedFrames.get(video) ?? 0;
+      const seconds = Math.round(clamp(value) * Math.max(0, video.duration * 30 - 1)) / 30;
+      if (video.seeking) return;
+      if (Math.abs(video.currentTime - seconds) > 1 / 60) {
+        video.currentTime = seconds;
+      } else if (video.readyState >= 2) {
+        video.dataset.frameReady = 'true';
+      }
+    };
+    const seek = (video, value) => {
+      wantedFrames.set(video, value);
+      flushVideo(video);
     };
     const draw = () => {
       raf = 0;
-      current = Math.abs(target - current) < .001 ? target : mix(current, target, .2);
-      const raw = current;
+      // Geometry is a pure function of scroll, never of media event timing.
+      const raw = sceneTime(target);
       const t = raw<6?raw:raw<7?6:raw-1;
       const mobile = window.innerWidth <= 760;
       const w = screen.clientWidth;
@@ -98,7 +109,7 @@ export default function ScrollStory({ en, txt }) {
       });
       introTitle.style.setProperty('--title-reveal',String(ramp(0,.3,t)));
       style(introTitle, {opacity: 1-ramp(.38,.77,t),transform:`translateY(${-ramp(.3,.8,t)*65}px)`});
-      seek(heroVideo, ramp(0,1.5,t));
+      seek(heroVideo, videoProgress(target));
 
       const backgrounds = [[255,255,255],[247,244,237],[235,242,222],[223,241,239],[245,246,248],[237,242,248],[255,255,255]];
       const colorStep = clamp(t-.5,0,5.999);
@@ -106,7 +117,7 @@ export default function ScrollStory({ en, txt }) {
       const cp = ramp(0,1,colorStep-ci);
       screen.style.backgroundColor = `rgb(${backgrounds[ci].map((v,i)=>Math.round(mix(v,backgrounds[ci+1][i],cp))).join(',')})`;
       productScenes.forEach((scene,i) => {
-        const center = stops[i+1];
+        const center = productCenters[i];
         const start = center-.85;
         const entry = ramp(start,center-.12,t);
         const departure = ramp(center+.36,center+.98,t);
@@ -145,35 +156,33 @@ export default function ScrollStory({ en, txt }) {
       reveal(ending,ramp(6.06,6.37,t));
       style(ending.querySelector('.story-ending-frame'),{clipPath:`inset(${mix(36,0,endIn)}% ${mix(38,0,endIn)}% round ${mix(180,0,endIn)}px)`});
       style(ending.querySelector('.story-ending-copy'),{opacity:ramp(6.4,6.76,t),transform:`translateY(${mix(50,0,endIn)}px)`});
-      if(t>6.06) seek(endingVideo,ramp(6.05,7,t)); else endingVideo?.pause();
+      seek(endingVideo,clamp(t-6.62));
       reveal(logistics,ramp(5.95,6.25,raw)*(1-ramp(6.85,7.2,raw)));
-      seek(logisticsVideo,ramp(6,7,raw));
+      seek(logisticsVideo,clamp((raw-6)/.85));
       logistics.querySelector('.story-logistics-frame').style.transform=`scale(${mix(1.12,1,ramp(6,7,raw))})`;
-      screen.style.setProperty('--story-progress',String(raw/8));
+      screen.style.setProperty('--story-progress',String(target/STORY_END));
       const active = t<.95?0:t<2.13?1:t<3.17?2:t<4.15?3:t<5.22?4:raw<6.12?5:raw<7.15?6:7;
       screen.dataset.scene=String(active);
       if(chapterRef.current!==active){chapterRef.current=active;setChapter(active);}
-      if(alive&&Math.abs(target-current)>.001) raf=requestAnimationFrame(draw);
     };
     const measure = () => {
       const header=0;
-      target=clamp((header-host.getBoundingClientRect().top)/(host.offsetHeight-screen.offsetHeight))*8;
+      target=clamp((header-host.getBoundingClientRect().top)/Math.max(1,host.offsetHeight-screen.offsetHeight))*STORY_END;
       if(!raf) raf=requestAnimationFrame(draw);
     };
-    const onSeeked=()=>{if(alive&&!raf)raf=requestAnimationFrame(draw);};
+    const onSeeked=event=>{if(alive)flushVideo(event.currentTarget);};
     const mediaEvents = ['seeked','loadeddata','canplay','progress','durationchange'];
     [heroVideo,endingVideo,logisticsVideo].forEach(video=>mediaEvents.forEach(event=>video?.addEventListener(event,onSeeked)));
     window.addEventListener('scroll',measure,{passive:true});
     window.addEventListener('resize',measure);
     measure();
-    current=target;
     return()=>{alive=false;cancelAnimationFrame(raf);window.removeEventListener('scroll',measure);window.removeEventListener('resize',measure);screen.querySelectorAll('.story-scene').forEach(scene=>{scene.inert=false;});[heroVideo,endingVideo,logisticsVideo].forEach(video=>{video?.pause();mediaEvents.forEach(event=>video?.removeEventListener(event,onSeeked));});};
   }, [simple]);
 
   const go = index => {
     if(simple) { root.current.querySelector(`[data-story-chapter="${index}"]`)?.scrollIntoView({behavior:'smooth',block:'start'}); return; }
     const top=window.scrollY+root.current.getBoundingClientRect().top;
-    window.scrollTo({top:top+(root.current.offsetHeight-stage.current.offsetHeight)*(stops[index]/8),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    window.scrollTo({top:top+(root.current.offsetHeight-stage.current.offsetHeight)*(stops[index]/STORY_END),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   };
   const changeMode=()=>{setSimple(v=>!v);requestAnimationFrame(()=>root.current.scrollIntoView({block:'start'}));};
   return <section className={`scroll-story ${simple?'story-simple':''}`} ref={root} aria-label={en?'The BOOMYUNG story':'스크롤로 만나는 부명 이야기'}>
@@ -181,7 +190,7 @@ export default function ScrollStory({ en, txt }) {
       <article className="story-scene story-intro" data-story-chapter="0">
         <div className="story-intro-frame">
           <img className="story-video-poster" src="./assets/renewal/living-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog and cat sharing a sunlit home':'햇살이 드는 집에서 함께 쉬는 강아지와 고양이'} />
-          <ScrubVideo muted playsInline preload="auto" className={videoReady.living?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,living:true}))} src="./assets/renewal/living.mp4" />
+          <ScrubVideo muted playsInline preload="auto" className={videoReady.living?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,living:true}))} src="./assets/renewal/living-scrub.mp4" />
           <div className="story-film-shade" />
         </div>
         <div className="story-opening-title"><span className="story-eyebrow">{content('storyEyebrow')}</span><h1 id="home-heading">{withBreaks(content('storyHeroTitle'))}</h1><button className="story-scroll-prompt" onClick={()=>go(1)}>{en?'Scroll to discover':'스크롤하며 만나보세요'} <span>↓</span></button></div>
@@ -200,9 +209,9 @@ export default function ScrollStory({ en, txt }) {
         <div className="story-media-copy"><span className="story-eyebrow">{content('researchEyebrow')}</span><h2>{withLineBreaks(content('researchTitle'))}</h2><p style={{whiteSpace:'pre-line'}}>{content('researchBody')}</p><Link to="/about" className="story-link">{en?'Discover our story':'부명 이야기'} ↗</Link></div>
         <div className="story-research-object"><div className="story-research-halo"/><img src="./assets/wellzen/wellzen_02.png" alt={en?'A pet health research application':'반려동물 건강 관리 연구개발 적용 사례'}/><div className="story-research-caption"><span>R&D</span><span>{en?'Thoughtful care, through research.':'더 깊이 연구하고, 더 세심하게.'}</span></div></div>
       </article>
-      <article className="story-scene story-logistics" data-story-chapter="6"><div className="story-logistics-frame"><ScrubVideo muted playsInline preload="auto" poster="./assets/renewal/logistics-poster.jpg" className="ready" src="./assets/renewal/logistics.mp4" /><div className="story-film-shade"/></div><div className="story-media-copy"><span className="story-eyebrow">{content('logisticsEyebrow')}</span><h2>{withLineBreaks(content('logisticsTitle'))}</h2><p>{content('logisticsBody')}</p></div></article>
+      <article className="story-scene story-logistics" data-story-chapter="6"><div className="story-logistics-frame"><img className="story-video-poster" src="./assets/renewal/logistics-poster.jpg" alt="" /><ScrubVideo muted playsInline preload="auto" poster="./assets/renewal/logistics-poster.jpg" className="ready" src="./assets/renewal/logistics-scrub.mp4" /><div className="story-film-shade"/></div><div className="story-media-copy"><span className="story-eyebrow">{content('logisticsEyebrow')}</span><h2>{withLineBreaks(content('logisticsTitle'))}</h2><p>{content('logisticsBody')}</p></div></article>
       <article className="story-scene story-ending" data-story-chapter="7">
-        <div className="story-ending-frame"><img className="story-video-poster" src="./assets/renewal/garden-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog enjoying a bright garden':'햇살 가득한 정원에서 걷는 강아지'}/><ScrubVideo muted playsInline preload="auto" className={videoReady.garden?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,garden:true}))} src="./assets/renewal/garden.mp4" /><div className="story-film-shade"/></div>
+        <div className="story-ending-frame"><img className="story-video-poster" src="./assets/renewal/garden-poster.jpg" onError={event=>{event.currentTarget.onerror=null;event.currentTarget.src='./assets/hero_slide_2.jpg';}} alt={en?'A dog enjoying a bright garden':'햇살 가득한 정원에서 걷는 강아지'}/><ScrubVideo muted playsInline preload="auto" className={videoReady.garden?'ready':''} onLoadedData={()=>setVideoReady(v=>({...v,garden:true}))} src="./assets/renewal/garden-scrub.mp4" /><div className="story-film-shade"/></div>
         <div className="story-ending-copy"><span className="story-eyebrow">{content('endingEyebrow')}</span><h2>{withLineBreaks(content('endingTitle'))}</h2><p>{content('endingBody')}</p><Link to="/brands" className="story-link">{en?'Meet our brands':'우리의 브랜드 만나보기'} ↗</Link></div>
       </article>
       <nav className="story-navigation" aria-label={en?'Story chapters':'이야기 장면 선택'}>{names.map((name,i)=><button key={i} className={chapter===i?'active':''} aria-current={chapter===i?'step':undefined} aria-label={name} onClick={()=>go(i)}><i/><span>{name}</span></button>)}</nav>
@@ -211,4 +220,3 @@ export default function ScrollStory({ en, txt }) {
     </div>
   </section>;
 }
-

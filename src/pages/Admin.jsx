@@ -281,7 +281,8 @@ export default function Admin() {
     descriptionEn: '',
     color: '#0066B3',
     logo: '',
-    logoScale: 1
+    logoScale: 1,
+    bgImage: ''
   });
 
   // 기존 브랜드 수정 팝업 상태
@@ -296,7 +297,8 @@ export default function Admin() {
     descriptionEn: '',
     color: '#0066B3',
     logo: '',
-    logoScale: 1
+    logoScale: 1,
+    bgImage: ''
   });
 
   // 2. 제품 등록 폼 입력값
@@ -499,6 +501,18 @@ export default function Admin() {
     }
   };
 
+  // 브랜드 카드 배경 이미지 업로드 처리 (예: 반려동물 라이프스타일 사진 — 로고 뒤에 깔리는 배경)
+  const handleBgImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const url = await readAndUpload(file);
+      setBrandForm(prev => ({ ...prev, bgImage: url }));
+    } catch (err) {
+      alert(isEn ? 'Image upload failed.' : '이미지 업로드에 실패했습니다.');
+    }
+  };
+
   // 기존 브랜드의 "수정" 버튼 클릭 시 - 수정 폼에 해당 브랜드 정보를 채워 넣고 팝업을 염
   const handleOpenEditBrand = (brand) => {
     setEditingBrandId(brand.id);
@@ -512,7 +526,8 @@ export default function Admin() {
       descriptionEn: brand.descriptionEn || '',
       color: brand.color || '#0066B3',
       logo: brand.logo || '',
-      logoScale: brand.logoScale || 1
+      logoScale: brand.logoScale || 1,
+      bgImage: brand.bgImage || ''
     });
   };
 
@@ -527,6 +542,18 @@ export default function Admin() {
     try {
       const url = await readAndUpload(file);
       setEditBrandForm(prev => ({ ...prev, logo: url }));
+    } catch (err) {
+      alert(isEn ? 'Image upload failed.' : '이미지 업로드에 실패했습니다.');
+    }
+  };
+
+  // 수정 폼에서 브랜드 카드 배경 이미지를 다시 업로드할 때 처리
+  const handleEditBgImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const url = await readAndUpload(file);
+      setEditBrandForm(prev => ({ ...prev, bgImage: url }));
     } catch (err) {
       alert(isEn ? 'Image upload failed.' : '이미지 업로드에 실패했습니다.');
     }
@@ -548,7 +575,8 @@ export default function Admin() {
         color: editBrandForm.color,
         logo: editBrandForm.logo,
         hasLogo: !!editBrandForm.logo,
-        logoScale: Number(editBrandForm.logoScale) || 1
+        logoScale: Number(editBrandForm.logoScale) || 1,
+        bgImage: editBrandForm.bgImage || ''
       });
       setSuccessMsg(isEn ? 'Brand updated successfully!' : '브랜드 정보가 수정되었습니다!');
       handleCloseEditBrand();
@@ -705,7 +733,8 @@ export default function Admin() {
       descriptionEn,
       categories: [],
       color: brandForm.color || '#0066B3',
-      logoScale: Number(brandForm.logoScale) || 1
+      logoScale: Number(brandForm.logoScale) || 1,
+      bgImage: brandForm.bgImage || ''
     };
 
     try {
@@ -721,7 +750,8 @@ export default function Admin() {
         descriptionEn: '',
         color: '#0066B3',
         logo: '',
-        logoScale: 1
+        logoScale: 1,
+        bgImage: ''
       });
     } catch (err) {
       alert(isEn ? 'Failed to register brand. Please try again.' : '브랜드 등록에 실패했습니다. 다시 시도해 주세요.');
@@ -1225,6 +1255,28 @@ export default function Admin() {
                   onChange={e => setBrandForm({ ...brandForm, logoScale: e.target.value })}
                   style={{ width: '100%' }}
                 />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#374151' }}>
+                  🖼️ {isEn ? 'Brand Card Background Photo' : '브랜드 카드 배경 이미지'}
+                </label>
+                <p style={{ margin: '0 0 8px', fontSize: '0.85rem', color: '#6B7280' }}>
+                  {isEn
+                    ? "The lifestyle photo shown behind the logo on the Brands page card. Leave empty to use the plain color background."
+                    : '브랜드 목록 페이지 카드에서 로고 뒤에 깔리는 사진입니다. 비워두면 단색 배경으로 표시됩니다.'}
+                </p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBgImageUpload}
+                  style={{ width: '100%', padding: '8px', border: '1px solid #D1D5DB', borderRadius: '6px' }}
+                />
+                {brandForm.bgImage && (
+                  <div style={{ marginTop: '10px', padding: '10px', background: '#FAFAFA', borderRadius: '8px', border: '1px dashed #D1D5DB' }}>
+                    <img src={brandForm.bgImage} alt="Brand Background Preview" style={{ width: '100%', maxHeight: '160px', objectFit: 'cover', borderRadius: '6px' }} />
+                  </div>
+                )}
               </div>
 
               <button
@@ -2381,6 +2433,23 @@ export default function Admin() {
                 onChange={e => setEditBrandForm({ ...editBrandForm, logoScale: e.target.value })}
                 style={{ width: '100%' }}
               />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#374151' }}>
+                🖼️ {isEn ? 'Brand Card Background Photo' : '브랜드 카드 배경 이미지'}
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleEditBgImageUpload}
+                style={{ width: '100%', padding: '8px', border: '1px solid #D1D5DB', borderRadius: '6px' }}
+              />
+              {editBrandForm.bgImage && (
+                <div style={{ marginTop: '10px', padding: '10px', background: '#FAFAFA', borderRadius: '8px', border: '1px dashed #D1D5DB' }}>
+                  <img src={editBrandForm.bgImage} alt="Brand Background Preview" style={{ width: '100%', maxHeight: '160px', objectFit: 'cover', borderRadius: '6px' }} />
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>

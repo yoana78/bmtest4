@@ -176,7 +176,7 @@ export default function Trust() {
       no: '30-0833217',
       titleKo: '애견용 패드',
       titleEn: 'Pet Pad',
-      image: './assets/patents/design_0833217.png'
+      image: './assets/patents/design_0833217.jpg'
     },
     {
       typeKo: '디자인등록',
@@ -184,7 +184,7 @@ export default function Trust() {
       no: '30-0847166',
       titleKo: '애완동물용 목줄',
       titleEn: 'Pet Leash',
-      image: './assets/patents/design_0847166.png'
+      image: './assets/patents/design_0847166.jpg'
     }
   ];
 

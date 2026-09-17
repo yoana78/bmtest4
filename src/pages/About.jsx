@@ -6,7 +6,7 @@ import './About.css';
 
 const facilityMeta = [
   { id:'production', label:['제조','Manufacturing'], titleKey:'facProductionTitle', bodyKey:'facProductionBody', tags:['ISO 22000','HACCP','OEM / ODM'], images:['./assets/homad/homad_02.jpg','./assets/homad/homad_01.jpg','./assets/homad/homad_03.jpg','./assets/homad/homad_04.jpg'] },
-  { id:'research', label:['연구개발','Research'], titleKey:'facResearchTitle', bodyKey:'facResearchBody', tags:['R&D','PET HEALTHCARE'], images:['./assets/wellzen/wellzen_02.png','./assets/wellzen/wellzen_01.png'] },
+  { id:'research', label:['연구개발','Research'], titleKey:'facResearchTitle', bodyKey:'facResearchBody', tags:['R&D','PET HEALTHCARE'], images:['./assets/wellzen/wellzen_02.jpg','./assets/wellzen/wellzen_01.jpg'] },
   { id:'logistics', label:['물류','Logistics'], titleKey:'facLogisticsTitle', bodyKey:'facLogisticsBody', tags:['DISTRIBUTION','PARTNERSHIP'], video:'./assets/renewal/logistics.mp4', images:['./assets/renewal/logistics-poster.jpg'] },
   { id:'global', label:['글로벌 생산','Global production'], titleKey:'facGlobalTitle', bodyKey:'facGlobalBody', tags:['QINGDAO','OEM / ODM'], images:['./assets/china/qingdao-factory.jpg','./assets/china/sand_factory_02.jpg'] },
 ];

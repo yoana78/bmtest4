@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-const links = [ ['/', '홈', 'Home'], ['/about', '회사소개', 'Company'], ['/brands', '브랜드', 'Brands'], ['/catalog', '제품', 'Products'], ['/trust', '신뢰와 인증', 'Quality'] ];
+const links = [ ['/', '홈', 'Home'], ['/about', '회사소개', 'Company'], ['/brands', '브랜드', 'Brands'], ['/catalog', '제품', 'Products'], ['/trust', '품질·인증', 'Quality'] ];
 export default function Header() {
   const { lang, toggleLang } = useLanguage();
   const en = lang === 'en';

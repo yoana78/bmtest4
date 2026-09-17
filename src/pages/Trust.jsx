@@ -69,8 +69,8 @@ export default function Trust() {
       titleEn: 'Environmental Management System',
       descKo: '생산 전 과정에서 환경 영향을 최소화하고 친환경 제조 기준을 엄격히 준수하는 국제 환경경영 표준을 적용합니다.',
       descEn: 'Certified international environmental management standard minimizing footprint across all production stages.',
-      image: null,
-      imageEn: null,
+      image: './assets/certifications/iso14001.jpg',
+      imageEn: './assets/certifications/iso14001_en.jpg',
       logo: './assets/cert_logos/iso14001_logo.svg'
     },
     {
@@ -79,8 +79,8 @@ export default function Trust() {
       titleEn: 'Food Safety Management System',
       descKo: '원료 입고부터 제조, 멸균, 포장 전 과정에 걸쳐 글로벌 식품 규격에 부합하는 안전 경영 시스템을 구축했습니다.',
       descEn: 'Global food safety standard implemented across entire pipeline from raw sourcing to sterile packaging.',
-      image: null,
-      imageEn: null,
+      image: './assets/certifications/iso22000.jpg',
+      imageEn: './assets/certifications/iso22000_en.jpg',
       logo: './assets/cert_logos/iso22000_logo.svg'
     },
     {
@@ -89,8 +89,8 @@ export default function Trust() {
       titleEn: 'Hazard Analysis Critical Control Point',
       descKo: '식품 위해요소를 과학적·체계적으로 사전 분석 및 통제하여 반려동물이 안심하고 먹을 수 있는 제품을 생산합니다.',
       descEn: 'Systematic preventive approach to food safety biological, chemical, and physical hazards.',
-      image: null,
-      imageEn: null,
+      image: './assets/certifications/haccp.jpg',
+      imageEn: './assets/certifications/haccp_en.jpg',
       logo: './assets/cert_logos/haccp_logo.svg'
     },
     {

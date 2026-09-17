@@ -25,17 +25,18 @@ export default function Footer() {
               </span>
             </div>
             <p>
-              {isEn
-                ? '306, 19, Geonwon-daero 34beon-gil, Guri-si, Gyeonggi-do, Republic of Korea'
-                : '경기도 구리시 건원대로34번길 19 306'}
+              {isEn ? (
+                <>
+                  306, 19, Geonwon-daero 34beon-gil, Guri-si, Gyeonggi-do, Republic of Korea
+                  <br />
+                  Business Registration No.: 132-81-49973
+                </>
+              ) : (
+                '경기도 구리시 건원대로34번길 19 306 | 사업자등록번호: 132-81-49973'
+              )}
+              <br />
+              TEL: {isEn ? '+82-31-553-8003' : '031-553-8003'} | FAX: {isEn ? '+82-31-592-2460' : '031-592-2460'} | E-MAIL: help@petsb2b.co.kr
             </p>
-            <p>
-              {isEn
-                ? 'TEL: +82-31-553-8003 | FAX: +82-31-592-2460'
-                : 'TEL: 031-553-8003 | FAX: 031-592-2460'}
-            </p>
-            <p>E-MAIL: help@petsb2b.co.kr</p>
-            <p>{isEn ? 'Business Reg. No.: 132-81-49973' : '사업자등록번호: 132-81-49973'}</p>
           </div>
 
           {/* 우측: 바로가기 링크 */}
@@ -49,7 +50,7 @@ export default function Footer() {
             <div className="bm-footer-col">
               <span className="bm-footer-col-title">{isEn ? 'BUSINESS' : '비즈니스'}</span>
               <Link to="/catalog">{isEn ? 'Product Catalog' : '제품 카탈로그'}</Link>
-              <Link to="/trust">{isEn ? 'Trust & Certification' : '신뢰와 인증'}</Link>
+              <Link to="/trust">{isEn ? 'Trust & Certification' : '품질·인증'}</Link>
               <Link to="/contact">{isEn ? 'B2B Inquiry' : 'B2B 입점 문의'}</Link>
             </div>
           </div>
@@ -61,7 +62,6 @@ export default function Footer() {
           <div className="bm-footer-bottom-links">
             <span onClick={() => setShowPrivacyModal(true)}>{isEn ? 'Privacy Policy' : '개인정보처리방침'}</span>
             <span onClick={() => setShowTermsModal(true)}>{isEn ? 'Terms of Service' : '이용약관'}</span>
-            <Link to="/admin">{isEn ? 'Admin' : '관리자'}</Link>
           </div>
         </div>
       </div>
